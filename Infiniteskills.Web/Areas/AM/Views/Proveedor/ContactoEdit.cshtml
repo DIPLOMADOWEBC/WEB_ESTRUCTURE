@@ -1,0 +1,28 @@
+﻿@using Infiniteskills.Helpers
+@model Infiniteskills.Transport.ContactoDTO
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-body form-horizontal">
+                <div class="form-group">
+                    @Html.CRM().TextBoxFor(m => m.NombreContacto, "col-lg-10", "Nombres", "col-lg-2").Attributes(new { @placeholder = "Nombres y Apellidos" })
+                </div>
+                <div class="form-group">
+                    @Html.CRM().DropDownList("AreaId", Model.AreaId, @ViewBag.AreaList, "col-lg-4", "Area", "col-lg-2")
+                    @Html.CRM().TextBoxFor(m => m.NumeroDocumentoContacto, "col-lg-4", "Nro Doc.", "col-lg-2").Attributes(new { @placeholder = "Nro Documento", @maxlength = "11" })
+                </div>
+                <div class="form-group">
+                    @Html.CRM().TextBoxFor(m => m.TelefonoContacto, "col-lg-4", "Telefono", "col-lg-2").Attributes(new { @placeholder = "Telefono", @maxlength = "10" })
+                    @Html.CRM().TextBoxFor(m => m.CelularContacto, "col-lg-4", "Celular", "col-lg-2").Attributes(new { @placeholder = "Celular", @maxlength = "10" })
+                </div>
+                <div class="form-group">
+                    @Html.CRM().TextBoxFor(m => m.EmailContacto, "col-lg-10", "Correo", "col-lg-2").Attributes(new { @placeholder = "Correo" })
+                </div>
+                <div class="form-group">
+                    @Html.CRM().TextBoxFor(m => m.DireccionContacto, "col-lg-10", "Dirección", "col-lg-2").Attributes(new { @placeholder = "Direccion" })
+                </div>
+                @Html.HiddenFor(m => m.ContactoId)
+            </div>
+        </div>
+    </div>
+</div>

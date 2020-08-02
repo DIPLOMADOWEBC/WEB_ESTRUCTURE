@@ -1,0 +1,213 @@
+﻿@using Infiniteskills.Helpers
+@{
+    ViewData["Title"] = "Index";
+}
+<div class="row">
+    <div class="col-lg-12">
+        <nav class="btn-toolbar text-left titleuser">
+            <a href="#" data-toggle="sidebar"><span class="glyphicon glyphicon-option-vertical"></span></a>
+            <label>Listado Kardex</label>
+        </nav>
+    </div>
+</div>
+@Html.CRM().MenuBar("MenuBar", "onClickMenuBar", new ItemMenuBar[]{
+   new ItemMenuBar(MenuBarButtonType.Print)
+})
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-body form-horizontal">
+                <div class="col-lg-11">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            @Html.CRM().DateTimePicker("FechaInicio", null, "col-lg-4", "Fecha Inicio", "col-lg-2").PickerType(DateTimePickerType.Date).Attributes(new { @placeholder = "Fecha Inicio" })
+                            @Html.CRM().DateTimePicker("FechaFinal", null, "col-lg-4", "Fecha Final", "col-lg-2").PickerType(DateTimePickerType.Date).Attributes(new { @placeholder = "Fecha Final" })
+                        </div>
+                        <div class="form-group">
+                            @Html.CRM().Select2List("EmpresaId", null, ViewBag.ListarEmpresa, "col-lg-10", "Empresa", "col-lg-2")
+                        </div>
+                        <div class="form-group">
+                            @Html.CRM().Select2List("TipoMovimientoId", null, @ViewBag.TipoMovimimentoList, "col-lg-10", "Movimiento", "col-lg-2", new { @onchange = "onChangeMovimiento(this)" })
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            @Html.CRM().Select2List("BienServicioId", null, null, "col-lg-10", "Producto", "col-lg-2")
+                        </div>
+                        <div class="form-group">
+                            @Html.CRM().Select2List("AlmacenId", null, ViewBag.ListarAlmacen, "col-lg-10", "Almacen", "col-lg-2")
+                        </div>
+                        <div class="form-group">
+                            @Html.CRM().Select2List("TipoOperacionId", null, @ViewBag.TipoOperacionList, "col-lg-10", "Operación", "col-lg-2")
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-1">
+                    <div class="form-group">
+                        @(Html.CRM().InputButton("buttonBuscar", new { Styles = "width:100%" }).ElementType(ButtonElementType.Button).Value("Buscar").OnClick("$('#jqGridKardex').jqGrid('setGridParam',{datatype:'json'}).trigger('reloadGrid');"))
+                    </div>
+                    <div class="form-group">
+                        @(Html.CRM().InputButton("buttonBuscar", new { Styles = "width:100%" }).ElementType(ButtonElementType.Button).Value("Limpiar")
+                        .OnClick("$('input:text').val(''); $('#jqGridKardex').jqGrid('setGridParam',{datatype:'json'}).trigger('reloadGrid');$('#EmpresaId').val(null).trigger('change');$('#AlmacenId').val(null).trigger('change');$('#AlmacenId').val(null).trigger('change');"))
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12" id="bandeja">
+        <div class="panel panel-default">
+            <div class="panel-body" id="panel">
+                <table id="jqGridKardex"></table>
+                <div id="jqGridPager"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    var _heightGrid = getHeightForResize(75);
+    var _widthPanel = $("#panel").width();
+    $(document).ready(function () {
+
+        $("#jqGridKardex").jqGrid({
+            url: '@Url.Action("ListarBandeja", "Kardex", new { area = "lg" })',
+            mtype: "POST",
+            postData: {
+                bienServicioId: function () { return $("#BienServicioId").val() },
+                empresaId: function () { return $("#EmpresaId").val() },
+                almacenId: function () { return $("#AlmacenId").val() },
+                tipoMovimientoId: function () { return $("#TipoMovimientoId").val() },
+                tipoOperacionId: function () { return $("#TipoOperacionId").val() },
+            },
+            datatype: "json",
+            colModel: [
+                { label: 'Id', name: 'OrdenId', key: true, hidden: true, frozen: true  },
+                { label: 'Fecha', name: 'FechaPedido', width: 65, align: 'center'},
+                { label: 'Operación', name: 'Movimiento', width: 100, formatter: colorCell, align: 'center'},
+                {
+                    label: 'Cantidad Ingreso', name: 'CantidadIngreso', width: 100, formatter: 'integer', align: 'right', formatoptions: {
+                        decimalSeparator: ".", thousandsSeparator: " ", decimalPlaces: 2
+                    }
+                },
+                {
+                    label: 'Valor Unitario', name: 'ValorUnitario', width: 100, formatter: 'integer', align: 'right', formatoptions: {
+                        decimalSeparator: ".", thousandsSeparator: " ", decimalPlaces: 2
+                    }
+                },
+                {
+                    label: 'Valor Ingreso', name: 'MontoIngreso', width: 100, formatter: 'integer', align: 'right', formatoptions: {
+                        decimalSeparator: ".", thousandsSeparator: " ", decimalPlaces: 2
+                    }
+                },
+                {
+                    label: 'Cantidad Salida', name: 'CantidadSalida', width: 120, formatter: 'integer', align: 'right', formatoptions: {
+                        decimalSeparator: ".", thousandsSeparator: " ", decimalPlaces: 2
+                    }
+                },
+
+                {
+                    label: 'Salida Valor', name: 'ValorSalida', width: 100, formatter: 'integer', align: 'right', formatoptions: {
+                        decimalSeparator: ".", thousandsSeparator: " ", decimalPlaces: 2
+                    }
+                },
+                {
+                    label: 'Stock Actual', name: 'CantidadSaldo', width: 100, formatter: 'integer', align: 'right', formatoptions: {
+                        decimalSeparator: ".", thousandsSeparator: " ", decimalPlaces: 2
+                    }
+                },
+                {
+                    label: 'Valor Existencia', name: 'MontoSaldo', width: 100, formatter: 'integer', align: 'right', formatoptions: {
+                        decimalSeparator: ".", thousandsSeparator: " ", decimalPlaces: 2
+                    }
+                },
+            ],
+            viewrecords: true,
+            loadonce: true,
+            //shrinkToFit: false,
+            height: (_heightGrid - 250),
+            width: _widthPanel,
+            rowNum: 20,
+            rowList: [10, 20, 30],
+            pager: "#jqGridPager"
+        });
+
+        $("#jqGridKardex").jqGrid("setFrozenColumns");
+
+            $("#BienServicioId").select2({
+            ajax: {
+                url: '@Url.Action("GetBienServicio")',
+                dataType: 'json',
+                delay: 250,
+                type: 'POST',
+                data: function (params) {
+                    return {
+                        query: params.term // search ter
+                    };
+                },
+                processResults: function (data, params) {
+                    return {
+                        results: $.map(data.data, function (item) {
+                            return {
+                                text: item.Descripcion,
+                                id: item.BienServicioId
+                            }
+                        })
+                    };
+                },
+                cache: true
+            },
+            placeholder: 'Busqueda de bienes y servicio',
+            allowClear: true,
+            escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+            minimumInputLength: 1,
+            language: {
+                inputTooShort: function () {
+                    return "Busqueda de bienes y servicio";
+                }
+            }
+        });
+
+        $('#BienServicioId').on('select2:select', function (e) {
+            $('#jqGridKardex').jqGrid('setGridParam', { datatype: 'json' }).trigger('reloadGrid');
+        });
+    });
+
+
+
+    function colorCell(cellvalue, options, rowObject) {
+        var backgroud = '', colorHex = '';
+        switch (rowObject.Color) {
+            case 'I':
+                colorHex = '#009494';
+                break;
+            case 'S':
+                colorHex = '#1763A6';
+                break;
+            case 'T':
+                colorHex = '#FF5729';
+                break;
+            default:
+               return cellvalue;
+                break;
+        }
+        backgroud = '<span style="background-color: ' + colorHex +'; display: block; width: 100%; height: 100%; color:#fff; ">' + cellvalue + '</span>';
+        return backgroud;
+    }
+
+
+     function onChangeMovimiento(control) {
+        $.post('@Url.Action("GetTipoOperacion", "Kardex")',
+         {
+             tipoMovimientoId: control.value
+            }, function (response) {
+             if (response.success) {
+                 $('#TipoOperacionId').find('option').remove().end();
+                 $("#TipoOperacionId").addItems(response.data);
+                 $("#TipoOperacionId").prop("disabled", false);
+             }
+            
+         });
+    };
+
+</script>

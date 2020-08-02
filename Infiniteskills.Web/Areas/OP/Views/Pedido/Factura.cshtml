@@ -1,0 +1,260 @@
+﻿@model IEnumerable<Infiniteskills.Transport.OrdenItemDTO>
+@{
+    Layout = "";
+    int contador = 0;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Documento</title>
+    <link rel="stylesheet" />
+    <style type="text/css">
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            /*background-color: #FAFAFA;*/
+            font: 12pt "Tahoma";
+        }
+
+        .table {
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 20px;
+            font-size: 12px;
+        }
+
+        #factura th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+        }
+
+        #cliente td {
+            padding-top: 4px;
+            padding-bottom: 4px;
+            text-align: left;
+        }
+
+        #items {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+            #items td, #items th {
+                border: 1px solid #3d3e40;
+                padding: 8px;
+            }
+
+            #items tr:nth-child(even) {
+                background-color: #3d3e40;
+            }
+
+            #items tr:hover {
+                background-color: #3d3e40;
+            }
+
+            #items th {
+                padding-top: 12px;
+                padding-bottom: 12px;
+                text-align: left;
+                /*background-color: #4CAF50;*/
+                /*color: white;*/
+            }
+        /* Create three equal columns that floats next to each other */
+        .column1 {
+            float: left;
+            width: 20.33%;
+            padding: 10px;
+            height: 150px; /* Should be removed. Only for demonstration */
+        }
+
+            .column1 p {
+                text-align: center;
+            }
+
+        .column2 {
+            float: left;
+            width: 50.33%;
+            padding: 10px;
+            height: 150px; /* Should be removed. Only for demonstration */
+        }
+
+        .column3 {
+            float: left;
+            width: 100%;
+            padding: 10px;
+            height: 150px; /* Should be removed. Only for demonstration */
+        }
+
+            .column3 .table {
+                border: 1px solid black;
+            }
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        .text-bold {
+            font-weight: bold;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .column2, p {
+            margin: 0px;
+            font-size: 12px;
+            text-align: justify;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="row">
+            <div class="column1">
+                <h2>Valticore</h2>
+                <p>S.A.C</p>
+            </div>
+            <div class="column2">
+                <p>Av Urubamba 513  Ate vitarte Lima- Lima- Ate</p>
+                <p>Telefono: 013499423</p>
+                <p>www.valticore.com</p>
+            </div>
+            <div class="column3">
+                <table class="table" id="factura">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center">R.U.C</th>
+                        </tr>
+                        <tr>
+                            <th style="text-align:center">FACTURA ELECTRONICA</th>
+                        </tr>
+                        <tr>
+                            <th style="text-align:center">FC-15454</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </header>
+    <section>
+        <hr />
+        <article>
+            <table class="table" id="cliente">
+                <thead>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-bold">Fecha Emision:</td>
+                        <td>21/11/2017</td>
+                    </tr>
+                    <tr>
+                        <td class="text-bold">Nombre / Razon Social:</td>
+                        <td>JEDION MELBIN PAUCAR CARDENAS</td>
+                    </tr>
+                    <tr>
+                        <td class="text-bold">Direccion:</td>
+                        <td>MZ B1 LT 09 URB LA RONCADORA LIAM - LIMA - ATE</td>
+                    </tr>
+                    <tr>
+                        <td class="text-bold">RUC/DNI:</td>
+                        <td>1047680041</td>
+                    </tr>
+                    <tr>
+                        <td class="text-bold">Vendedor:</td>
+                        <td>JOSELYN RAMIREZ ROJAS</td>
+                    </tr>
+                </tbody>
+            </table>
+        </article>
+        <hr />
+        <article>
+            <table class="table" id="items">
+                <thead>
+                    <tr>
+                        <th>ITEM</th>
+                        <th>U.MED</th>
+                        <th>DESCRIPCION</th>
+                        <th>CANTIDAD</th>
+                        <th>PRECIO</th>
+                        <th>IMPORTE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        contador++;
+                        <tr>
+                            <td>@contador</td>
+                            <td></td>
+                            <td>@item.BienServicioDTO.Descripcion</td>
+                            <td class="text-right">@Math.Round(item.Cantidad,2)</td>
+                            <td class="text-right">@Math.Round(item.ValorUnitario,2)</td>
+                            <td class="text-right">@Math.Round(item.Cantidad * item.ValorUnitario,2)</td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4"></td>
+                        <td>Gravada</td>
+                        <td class="text-right">0</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"></td>
+                        <td>Exonerada</td>
+                        <td class="text-right">0</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"></td>
+                        <td>IGV</td>
+                        <td class="text-right">0</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"></td>
+                        <td>Importe Total</td>
+                        <td class="text-right">0</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </article>
+        <article>
+            <p style="font-weight:bold;">Observaciones: </p>
+            <p> Lista de incidencias, comprobantes no migrados del proceso de migracion: VENTAS MULTIPLES con codigo : 7323</p>
+        </article>
+        <br />
+        <article>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>OBSERVACIONES DE LA SUNAT: </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Desde hace algunos años España se ha sumado al carro del comercio electrónico.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </article>
+    </section>
+    <footer></footer>
+</body>
+</html>

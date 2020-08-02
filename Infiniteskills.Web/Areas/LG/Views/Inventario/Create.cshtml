@@ -1,0 +1,440 @@
+﻿@model Infiniteskills.Transport.OrdenDTO
+@using Infiniteskills.Helpers;
+@using Infiniteskills.Common;
+@{
+
+}
+<div class="row">
+    <div class="col-lg-12">
+        <nav class="btn-toolbar text-left titleuser">
+            <a href="#" data-toggle="sidebar"><span class="glyphicon glyphicon-option-vertical"></span></a>
+            <label>@ViewBag.Title</label>
+        </nav>
+    </div>
+</div>
+@Html.CRM().MenuBar("MenuBar", "onClickMenuBar", new ItemMenuBar[]{
+                           new ItemMenuBar(MenuBarButtonType.Save),
+                           new ItemMenuBar(MenuBarButtonType.Print,true),
+                           new ItemMenuBar(MenuBarButtonType.Exit)
+                       })
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-body form-horizontal">
+                @using (Html.BeginForm("", "", FormMethod.Post, new { @id = "form1" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.CRM().TextBoxFor(m => m.Codigo, "col-lg-4", "Código", "col-lg-2").Attributes(new { @placeholder = "Código", @readonly = "true" })
+                            @Html.CRM().DateTimePickerFor(m => m.FechaOrden, "col-lg-4", "Fecha", "col-lg-2").PickerType(DateTimePickerType.Date).Attributes(new { @readonly = "true" })
+                        </div>
+                        <div class="form-group">
+                            @Html.CRM().Select2List("DocumentoComercialId", Model.DocumentoComercialId, @ViewBag.DocComerciaList, "col-lg-4", "Documento", "col-lg-2")
+                            @Html.CRM().Select2List("MonedaId", Model.MonedaId, @ViewBag.MonedaList, "col-lg-4", "Moneda", "col-lg-2")
+                        </div>
+                        <div class="form-group">
+                            @if (ViewBag.IsNew)
+                            {
+                                 @Html.CRM().Select2List("TipoMovimientoId", null, @ViewBag.TipoMovimimentoList, "col-lg-4", "Movimiento", "col-lg-2", new { @onchange = "onChangeMovimiento(this)" })
+                                 @Html.CRM().Select2List("TipoOperacionId", Model.TipoOperacionId, @ViewBag.TipoOperacionList, "col-lg-4", "Operación", "col-lg-2")
+                            }
+                            else
+                            {
+                                @Html.CRM().Select2List("TipoMovimientoId", Model.TipoOperacionDTO.TipoMovimientoId, @ViewBag.TipoMovimimentoList, "col-lg-4", "Movimiento", "col-lg-2", new { @onchange = "onChangeMovimiento(this)" })
+                                @Html.CRM().Select2List("TipoOperacionId", Model.TipoOperacionId, @ViewBag.TipoOperacionList, "col-lg-4", "Operación", "col-lg-2")
+                            }
+                        </div>
+
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.CRM().Select2List("AlmacenId", Model.AlmacenId, @ViewBag.almacenList, "col-lg-10", "Almacen", "col-lg-2")
+                        </div>
+                        <div class="form-group">
+                            @Html.CRM().TextAreaFor(m => m.Observacion, "col-md-10", "Observación", "col-lg-2").Attributes(new { @placeholder = "Observación" })
+                        </div>
+                    </div>
+                    @Html.HiddenFor(m => m.OrdenId)
+                    @Html.HiddenFor(m => m.EditAction)
+                }
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                @Html.CRM().MenuBar("BienesMenuBar", "onClickBienesMenuBar", new ItemMenuBar[]{
+                                                        new ItemMenuBar(MenuBarButtonType.New,  false ),
+                                                        new ItemMenuBar(MenuBarButtonType.Edit,true),
+                                                        new ItemMenuBar(MenuBarButtonType.Save,true),
+                                                        new ItemMenuBar(MenuBarButtonType.Cancel,true)
+                                                    }, MenuBarType.Small)
+            </div>
+            <div class="panel-body" id="panel">
+                <table id="jqGridDetalle"></table>
+                <div id="jqGridPager"></div>
+            </div>
+        </div>
+    </div>
+   
+</div>
+@using (Html.CRM().Popup("myModalCliente", "Lista de Clientes", "onClickOkCliente", SizePopup.Large))
+{
+    <div id="divClienteContent"></div>
+}
+@using (Html.CRM().Popup("myModalProducto", "Bienes y Servicios", "onClickOkProducto", SizePopup.Large))
+{
+    <div id="divProductoContent"></div>
+}
+
+<script type="text/javascript">
+    var _widthPanel = $("#panel").width();
+    var _heightGrid = getHeightForResize(100);
+    $(document).ready(function () {
+        $("#jqGridDetalle").jqGrid({
+            url: '@Url.Action("ListarItem", "Inventario", new { area = "LG" })',
+            postData: {
+                ordenId: function () { return $("#OrdenId").val(); }
+            },
+            mtype: "POST",
+            datatype: "json",
+            colModel: [
+                { label: 'Id', name: 'OrdenItemId', hidden: true, formatter: 'integer' },
+                { label: '', name: 'OrdenId', hidden: true, formatter: 'integer' },
+                { label: '', name: 'BienServicioId', hidden: true, formatter: 'integer' },
+                { label: 'Código', name: 'Codigo', width: 20, sortable: false },
+                { label: 'Descripción', name: 'Descripcion', width: 100, sortable: false },
+                {
+                    label: 'Cantidad', name: 'Cantidad', width: 20, editable: true, formatter: 'integer', align: 'right', sortable: false, formatoptions: {
+                        decimalSeparator: ".", thousandsSeparator: " ", decimalPlaces: 2
+                    }, editoptions: {
+                        dataInit: function (elem, options) {
+                            $(elem).inputmask('decimal', { digits: 2 });
+                            $(elem).blur(function () {
+                                var rowId = $(elem).parent().parent().attr('id');
+                                var row = $('#jqGridDetalle').jqGrid("getLocalRow", rowId);
+                                var cantidad = stringToDecimal($(elem).val());
+                                var valorUnitario = $("#" + rowId + "_ValorUnitario").val();
+                                if (isNaN(valorUnitario))
+                                    valorUnitario = 0;
+
+                                var costoPrecioCantidad = multiplicar(valorUnitario, cantidad);
+                                var totalCostoDirecto = round(costoPrecioCantidad, 2);
+
+                                var subTotal = parseFloat(valorUnitario * cantidad);
+                                var resultadoImpuesto = parseFloat(subTotal * 0.18);
+                                var totalPagar = parseFloat(subTotal + resultadoImpuesto);
+                                $("#SubTotal").val(subTotal);
+                                $("#Impuesto").val(resultadoImpuesto);
+                                $("#TotalPedido").val(totalPagar);
+
+                                if (cantidad > 0)
+                                    $('#jqGridDetalle').jqGrid('setCell', rowId, 'SubTotal', totalCostoDirecto);
+
+                            });
+                        }
+                    }
+                },
+                 {
+                     label: 'Peso Neto', name: 'PesoNeto', width: 20, editable: true, formatter: 'integer', align: 'right', sortable: false,
+                     formatoptions: { decimalSeparator: ".", thousandsSeparator: " ", decimalPlaces: 2 }, editoptions: {
+                         dataInit: function (elem, options) {
+                             $(elem).inputmask('decimal', { digits: 2 });
+                         }
+                     }
+                 },
+                 {
+                     label: 'Peso Bruto', name: 'PesoBruto', width: 20, editable: true, formatter: 'integer', align: 'right', sortable: false,
+                     formatoptions: { decimalSeparator: ".", thousandsSeparator: " ", decimalPlaces: 2 }, editoptions: {
+                         dataInit: function (elem, options) {
+                             $(elem).inputmask('decimal', { digits: 2 });
+                         }
+                     }
+                 },
+                 {
+                     label: 'Valor Unitario', name: 'ValorUnitario', width: 20, editable: true, formatter: 'integer', align: 'right', sortable: false,
+                     formatoptions: { decimalSeparator: ".", thousandsSeparator: " ", decimalPlaces: 2 }, editoptions: {
+                         dataInit: function (elem, options) {
+                             $(elem).inputmask('decimal', { digits: 2 });
+                             $(elem).blur(function () {
+                                 var rowId = $(elem).parent().parent().attr('id');
+                                 var row = $('#jqGridDetalle').jqGrid("getLocalRow", rowId);
+                                 var valorUnitario = stringToDecimal($(elem).val());
+                                 var cantidad = $("#" + rowId + "_Cantidad").val();
+                                 if (isNaN(valorUnitario))
+                                     valorUnitario = 0;
+
+                                 var costoPrecioCantidad = multiplicar(valorUnitario, cantidad);
+                                 var totalCostoDirecto = round(costoPrecioCantidad, 2);
+
+                                 var subTotal = parseFloat(valorUnitario * cantidad);
+                                 var resultadoImpuesto = parseFloat(subTotal * 0.18);
+                                 var totalPagar = parseFloat(subTotal + resultadoImpuesto);
+                                 $("#SubTotal").val(subTotal);
+                                 $("#Impuesto").val(resultadoImpuesto);
+                                 $("#TotalPedido").val(totalPagar);
+
+                                 if (cantidad > 0)
+                                     $('#jqGridDetalle').jqGrid('setCell', rowId, 'SubTotal', totalCostoDirecto);
+
+                             });
+                         }
+                     }
+                 },
+                {
+                    label: 'Sub Total', name: 'SubTotal', width: 20, editable: false, formatter: 'integer', align: 'right', sortable: false,
+                    formatoptions: { decimalSeparator: ".", thousandsSeparator: " ", decimalPlaces: 2 }, editoptions: {
+                        readonly: 'readonly',
+                        dataInit: function (elem, options) {
+                            $(elem).inputmask('decimal', { digits: 2 });
+                        }
+                    },
+                },
+                  {
+                      label: "Eliminar",
+                      name: "actions",
+                      width: 20,
+                      sortable: false,
+                      formatter: "actions",
+                      formatoptions: {
+                          keys: true,
+                          editOptions: {},
+                          addOptions: {},
+                          delOptions: {
+                              url: '@Url.Action("Delete", "Inventario")',
+                              mtype: 'POST',
+                              onclickSubmit: function (eparam) {
+
+                              }
+                          }
+                      }
+                  },
+
+            ],
+            viewrecords: true,
+            rownumbers: true,
+            footerrow: true,
+            //shrinkToFit: false,
+            loadComplete: function () {
+                var grid = $(this);
+                precioVenta = grid.jqGrid('getCol', 'PrecioVenta', false, 'sum');
+                cantidad = grid.jqGrid('getCol', 'Cantidad', false, 'sum');
+                total = grid.jqGrid('getCol', 'Total', false, 'sum');
+                grid.jqGrid('footerData', 'set', { Producto: 'Sub Total', PrecioVenta: precioVenta, Cantidad: cantidad, Total: total });
+
+            },
+            pager: "#jqGridPager",
+            height: (_heightGrid - 370),
+            width: _widthPanel
+        });
+
+
+        $("#myModalProducto").on('show.bs.modal', function () {
+            $(this).find('input:text').val('');
+            var _productoBusqueda = $("#Descripcion").val();
+            controllerGetAction('@Url.Action("ProductoEdit", "Inventario")', null, 'divProductoContent', false, false, function () {
+                jQuery("#descripcionProd").val(_productoBusqueda);
+                jQuery("#buttonBuscar").click();
+            });
+        });
+        $('#myModalProducto').on('hidden.bs.modal', function (e) {
+            $('#divProductoContent').empty();
+        });
+
+
+        $("#TotalPedido, #Impuesto, #SubTotal").inputmask({
+            alias: "decimal",
+            allowMinus: false,
+            allowPlus: false,
+            autoGroup: true,
+            radixPoint: ".",
+            groupSeparator: ",",
+            groupSize: 3,
+            digits: "2",
+            integerDigits: "14",
+            digitsOptional: false
+        });
+
+
+
+    });
+
+
+
+    function onClickMenuBar(key) {
+        var editAction = $("#EditAction").val();
+        switch (key) {
+            case '@ButtonMenuBarActionConstant.SAVE':
+                InsertData();
+                break;
+            case '@ButtonMenuBarActionConstant.DELETE':
+                break;
+            case '@ButtonMenuBarActionConstant.EXIT':
+                controllerGetAction('@Url.Action("Bandeja", "Inventario", new { area = "LG" })', null, 'workspace', false, false, null);
+                break;
+        }
+    }
+
+
+
+    function InsertData() {
+
+        var data = $('#jqGridDetalle').getRowData();
+        if (jQuery.isEmptyObject(data)) {
+            MsgAlert(3, 'Selecciona bien y servicios.');
+            return false;
+        }
+
+        if (isEmptyElement("DocumentoComercialId", "Seleccione documento comercial"))
+            return false;
+
+        if (isEmptyElement("MonedaId", "Seleccione moneda."))
+            return false;
+
+        if (isEmptyElement("FechaOrden", "Seleccione fecha"))
+            return false;
+
+        if (isEmptyElement("AlmacenId", "Seleccione un almacen."))
+            return false;
+
+
+        gridDataIDs('jqGridDetalle').forEach(function (index) {
+            $("#jqGridDetalle").jqGrid('saveRow', index, { url: 'clientArray' });
+        });
+
+        var form = $('#form1');
+        var token = $('input[name="__RequestVerificationToken"]', form).val();
+        var data = $('#jqGridDetalle').getRowData();
+        var jsonData = {
+            __RequestVerificationToken: token,
+            Header: JSON.stringify($('#form1').serializeObject()),
+            Row: JSON.stringify(data),
+            EditAction: $("#EditAction").val(),
+            Detail: JSON.stringify($('#form3').serializeObject())
+        };
+        controllerSaveResponse("@Url.Action("Create", "Inventario", new { area = "LG" })", jsonData, true, true, function (response) {
+            if (response.success) {
+                MsgAlert(1, response.message);
+                controllerGetAction('@Url.Action("Bandeja", "Inventario", new { area = "LG" })', null, 'workspace', false, false, null);
+            } else {
+                MsgAlert(4, response.message);
+            }
+        });
+    }
+
+
+    function onClickProducto() {
+        $.post('@Url.Action("GetProducto", "Inventario")', {
+            codigo: $("#Producto").val()
+        }, function (response) {
+            if (response.success) {
+                $("#ProductoId").val(response.data.ProductoId);
+                $("#Producto").val(response.data.Codigo);
+                $("#Descripcion").val(response.data.Descripcion);
+                $("#PrecioVenta").val(response.data.PrecioVenta);
+            } else {
+                MsgAlert(3, response.message);
+            }
+        });
+    };
+
+    function onClickRowCliente(row) {
+        $("#ClienteId").val(row.ClienteId);
+        $("#Cliente").val(row.Codigo);
+        $("#NumeroRuc").val(row.NumeroRuc);
+        $("#RazonSocial").val(row.RazonSocial);
+        $("#Direccion").val(row.Direccion);
+        $("#myModalCliente").modal('hide');
+    };
+
+    function onClickRowProducto(row) {
+        $("#ProductoId").val(row.ProductoId);
+        $("#Producto").val(row.Codigo);
+        $("#Descripcion").val(row.Descripcion);
+        $("#myModalProducto").modal('hide');
+    };
+
+    function onClickOkProducto() {
+        var rowKey = jQuery("#jqGridProducto").getGridParam("selrow");
+        if (!isEmpty(rowKey)) {
+            var selectedIDs = jQuery("#jqGridProducto").getGridParam("selarrrow");
+
+            var rowObject = [];
+            $.each(selectedIDs, function (item, value) {
+                rowObject.push(jQuery('#jqGridProducto').getRowData(value));
+            });
+
+
+            var newRowId;
+            var precioProducto = 0;
+            var subTotal = 0;
+            var impuesto = 0;
+            var resultadoImpuesto = 0;
+            var totalPagar = 0;
+            $.each(rowObject, function (item, value) {
+                newRowId = gridRowCount("jqGridDetalle");
+                var count = newRowId + 1;
+                var cantidad = 1;
+                var setcelll = {
+                    rowID: newRowId + 1,
+                    initdata: {
+                        PedidoItemId: 0,
+                        PedidoId: 0,
+                        Codigo: value.Codigo,
+                        BienServicioId: value.BienServicioId,
+                        Descripcion: value.BienServicio,
+                        PrecioVenta: value.PrecioVenta,
+                        Cantidad: cantidad,
+                        Total: cantidad * value.PrecioVenta
+                    },
+                    position: "afterSelected"
+                }
+                precioProducto = cantidad * value.PrecioVenta;
+                subTotal = precioProducto + subTotal;
+                resultadoImpuesto = subTotal * 0.18;
+                totalPagar = subTotal + resultadoImpuesto;
+
+                $("#SubTotal").val(subTotal);
+                $("#Impuesto").val(resultadoImpuesto);
+                $("#TotalPedido").val(totalPagar)
+
+                jQuery("#jqGridDetalle").jqGrid('addRow', setcelll);
+                //jQuery("#jqGridDetalle").jqGrid('saveRow', count, setcelll);
+                jQuery('#jqGridDetalle').jqGrid('footerData', 'set', { Producto: 'Total', PrecioVenta: 0, Cantidad: 0, Total: subTotal });
+                jQuery("#myModalProducto").modal('hide');
+            });
+        } else {
+            MsgAlert(2, 'Seleccione almenos un articulo.');
+        }
+
+    };
+
+    function onClickBienesMenuBar(key) {
+        switch (key) {
+            case "@ButtonMenuBarActionConstant.NEW":
+                $('#myModalProducto').modal('show');
+                break;
+            case "@ButtonMenuBarActionConstant.SAVE":
+                break;
+            case "@ButtonMenuBarActionConstant.EDIT":
+                break;
+            case '@ButtonMenuBarActionConstant.CANCEL':
+                break;
+        }
+    };
+
+   function onChangeMovimiento(control) {
+        $.post('@Url.Action("GetTipoOperacion", "Inventario")',
+         {
+             tipoMovimientoId: control.value
+         }, function (response) {
+             $('#TipoOperacionId').find('option').remove().end();
+             $("#TipoOperacionId").addItems(response.data);
+             $("#TipoOperacionId").prop("disabled", false);
+         });
+    };
+</script>

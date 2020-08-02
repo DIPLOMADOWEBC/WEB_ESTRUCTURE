@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{63878541-4039-4EA4-8CB6-892016CD4561}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Infiniteskills.Infra.Ioc</RootNamespace>
+    <AssemblyName>Infiniteskills.Infra.Ioc</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=4.6.2.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.6.2\lib\net45\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="EFModule.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RepositoryModule.cs" />
+    <Compile Include="ServiceModule.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Infiniteskills.Common\Infiniteskills.Common.csproj">
+      <Project>{01163454-8314-4289-8703-3606ca2fd51b}</Project>
+      <Name>Infiniteskills.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infiniteskills.Infra.Base\PVenta.Infra.Base.csproj">
+      <Project>{1ecaa93b-7aae-4863-ae10-e46208435b2f}</Project>
+      <Name>PVenta.Infra.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infiniteskills.Infra.Core\PVenta.Infra.Core.csproj">
+      <Project>{31dcbfa1-fa50-46b8-bcf8-2c90d135bcba}</Project>
+      <Name>PVenta.Infra.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infiniteskills.Infra.Data\PVenta.Infra.Data.csproj">
+      <Project>{d557b8dd-7742-470d-8e06-7abea605a6df}</Project>
+      <Name>PVenta.Infra.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infiniteskills.Repository\PVenta.Repository.csproj">
+      <Project>{81238098-7de0-46a4-be44-323baa7ab1dc}</Project>
+      <Name>PVenta.Repository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infiniteskills.Service\PVenta.Service.csproj">
+      <Project>{323b2237-8987-4860-98c3-0a0b32202930}</Project>
+      <Name>PVenta.Service</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

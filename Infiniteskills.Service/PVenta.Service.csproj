@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{323B2237-8987-4860-98C3-0A0B32202930}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Infiniteskills.Service</RootNamespace>
+    <AssemblyName>Infiniteskills.Service</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoMapper, Version=6.2.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.6.2.2\lib\net45\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.1\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.3.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.3.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.1.0\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.1.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.4.12\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AlmacenService.cs" />
+    <Compile Include="AreaService.cs" />
+    <Compile Include="Contracts\IBienServicioService.cs" />
+    <Compile Include="Contracts\IImpuestoService.cs" />
+    <Compile Include="Contracts\IOrdenItemService.cs" />
+    <Compile Include="Contracts\IOrdenService.cs" />
+    <Compile Include="Contracts\IProveedorService.cs" />
+    <Compile Include="Contracts\IUsuarioService.cs" />
+    <Compile Include="ImpuestoService.cs" />
+    <Compile Include="LineaService.cs" />
+    <Compile Include="Mappers\ConfigureAutoMapper.cs" />
+    <Compile Include="Mappers\DomainToModelMappingConfig.cs" />
+    <Compile Include="Mappers\ModelToDomainMappingConfig.cs" />
+    <Compile Include="CategoriaService.cs" />
+    <Compile Include="ContactoService.cs" />
+    <Compile Include="DepartamentoService.cs" />
+    <Compile Include="DireccionService.cs" />
+    <Compile Include="DistritoService.cs" />
+    <Compile Include="DocumentoComercialService.cs" />
+    <Compile Include="DocumentoIdentidadService.cs" />
+    <Compile Include="EmpresaService.cs" />
+    <Compile Include="FormaPagoService.cs" />
+    <Compile Include="FormaVentaService.cs" />
+    <Compile Include="MarcaService.cs" />
+    <Compile Include="MenuService.cs" />
+    <Compile Include="MesContableService.cs" />
+    <Compile Include="MonedaService.cs" />
+    <Compile Include="OrdenItemService.cs" />
+    <Compile Include="OrdenService.cs" />
+    <Compile Include="PaisService.cs" />
+    <Compile Include="ParametroSistemaService.cs" />
+    <Compile Include="PeriodoCorrelativoService.cs" />
+    <Compile Include="PeriodoEmpresaService.cs" />
+    <Compile Include="PeriodoService.cs" />
+    <Compile Include="PersonalService.cs" />
+    <Compile Include="OrdenSaldoService.cs" />
+    <Compile Include="BienServicioService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProveedorContactoService.cs" />
+    <Compile Include="ProveedorService.cs" />
+    <Compile Include="ProvinciaService.cs" />
+    <Compile Include="RolMenuService.cs" />
+    <Compile Include="RolService.cs" />
+    <Compile Include="RolUsuarioService.cs" />
+    <Compile Include="Security\ApplicationUser.cs" />
+    <Compile Include="Security\IUserManager.cs" />
+    <Compile Include="Security\UserManager.cs" />
+    <Compile Include="Security\UserStore.cs" />
+    <Compile Include="SerieService.cs" />
+    <Compile Include="SucursalService.cs" />
+    <Compile Include="SucursalUsuarioService.cs" />
+    <Compile Include="TablaService.cs" />
+    <Compile Include="TipoBienService.cs" />
+    <Compile Include="TipoMovimientoService.cs" />
+    <Compile Include="TipoOperacionService.cs" />
+    <Compile Include="TipoPrecioService.cs" />
+    <Compile Include="TipoExistenciaService.cs" />
+    <Compile Include="TipoProveedorService.cs" />
+    <Compile Include="TipoUsuarioService.cs" />
+    <Compile Include="UnidadMedidaService.cs" />
+    <Compile Include="UsuarioService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Infiniteskills.Common\Infiniteskills.Common.csproj">
+      <Project>{01163454-8314-4289-8703-3606ca2fd51b}</Project>
+      <Name>Infiniteskills.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infiniteskills.Domain\PVenta.Domain.csproj">
+      <Project>{cb9dba8e-1b34-497c-9dfa-d829da45dea2}</Project>
+      <Name>PVenta.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infiniteskills.Infra.Base\PVenta.Infra.Base.csproj">
+      <Project>{1ecaa93b-7aae-4863-ae10-e46208435b2f}</Project>
+      <Name>PVenta.Infra.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infiniteskills.Infra.Core\PVenta.Infra.Core.csproj">
+      <Project>{31dcbfa1-fa50-46b8-bcf8-2c90d135bcba}</Project>
+      <Name>PVenta.Infra.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infiniteskills.Repository\PVenta.Repository.csproj">
+      <Project>{81238098-7de0-46a4-be44-323baa7ab1dc}</Project>
+      <Name>PVenta.Repository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infiniteskills.Transport\PVenta.Transport.csproj">
+      <Project>{2da78608-0357-4e99-b148-5d2fd7d80cf1}</Project>
+      <Name>PVenta.Transport</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2DA78608-0357-4E99-B148-5D2FD7D80CF1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Infiniteskills.Transport</RootNamespace>
+    <AssemblyName>Infiniteskills.Transport</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AlmacenDTO.cs" />
+    <Compile Include="AreaDTO.cs" />
+    <Compile Include="CategoriaDTO.cs" />
+    <Compile Include="ConductorDTO.cs" />
+    <Compile Include="ContactoDTO.cs" />
+    <Compile Include="DepartamentoDTO.cs" />
+    <Compile Include="DireccionProveedorDTO.cs" />
+    <Compile Include="DistritoDTO.cs" />
+    <Compile Include="DocumentoComercialDTO.cs" />
+    <Compile Include="DocumentoIdentidadDTO.cs" />
+    <Compile Include="EmpresaDTO.cs" />
+    <Compile Include="FormaPagoDTO.cs" />
+    <Compile Include="FormaVentaDTO.cs" />
+    <Compile Include="ImpuestoDTO.cs" />
+    <Compile Include="InventarioDTO.cs" />
+    <Compile Include="InventarioItemDTO.cs" />
+    <Compile Include="KardexProductoDTO.cs" />
+    <Compile Include="LineaDTO.cs" />
+    <Compile Include="MarcaDTO.cs" />
+    <Compile Include="MenuDTO.cs" />
+    <Compile Include="MesContableDTO.cs" />
+    <Compile Include="MonedaDTO.cs" />
+    <Compile Include="OrdenDTO.cs" />
+    <Compile Include="OrdenItemDTO.cs" />
+    <Compile Include="PaisDTO.cs" />
+    <Compile Include="ParametroSistemaDTO.cs" />
+    <Compile Include="PeriodoCorrelativoDTO.cs" />
+    <Compile Include="PeriodoDTO.cs" />
+    <Compile Include="PeriodoEmpresaDTO.cs" />
+    <Compile Include="PersonalDTO.cs" />
+    <Compile Include="OrdenSaldoDTO.cs" />
+    <Compile Include="BienServicioDTO.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProveedorContactoDTO.cs" />
+    <Compile Include="ProveedorDTO.cs" />
+    <Compile Include="ProvinciaDTO.cs" />
+    <Compile Include="RolDTO.cs" />
+    <Compile Include="RolMenuDTO.cs" />
+    <Compile Include="RolUsuarioDTO.cs" />
+    <Compile Include="SerieDTO.cs" />
+    <Compile Include="SucursalDTO.cs" />
+    <Compile Include="SucursalPersonalDTO.cs" />
+    <Compile Include="TablaDTO.cs" />
+    <Compile Include="TipoBienDTO.cs" />
+    <Compile Include="TipoMovimientoDTO.cs" />
+    <Compile Include="TipoOperacionDTO.cs" />
+    <Compile Include="TipoPrecioDTO.cs" />
+    <Compile Include="TipoExistenciaDTO.cs" />
+    <Compile Include="TipoProveedorDTO.cs" />
+    <Compile Include="TipoUsuarioDTO.cs" />
+    <Compile Include="UnidadMedidaDTO.cs" />
+    <Compile Include="UsuarioSucursalDTO.cs" />
+    <Compile Include="UsuarioDTO.cs" />
+    <Compile Include="VehiculoDTO.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

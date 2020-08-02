@@ -1,0 +1,249 @@
+@model Infiniteskills.Transport.EmpresaDTO
+@using Infiniteskills.Helpers
+<div class="row">
+    <div class="col-lg-12">
+        <nav class="btn-toolbar text-left titleuser">
+            <a href="#" data-toggle="sidebar"><span class="glyphicon glyphicon-option-vertical"></span></a>
+            <label>@ViewBag.Title</label>
+        </nav>
+    </div>
+</div>
+@Html.CRM().MenuBar("MenuBar", "onClickMenuBar", new ItemMenuBar[]{
+                                                   new ItemMenuBar(MenuBarButtonType.Save),
+                                                   new ItemMenuBar(MenuBarButtonType.Exit)
+
+                                               })
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        @using (Html.BeginForm("", "", FormMethod.Post, new { @class = "form-horizontal", @id = "form1" }))
+        {
+            @Html.AntiForgeryToken()
+
+        <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#datosPersonal" aria-controls="datosPersonal" role="tab" data-toggle="tab">Datos de la empresa</a></li>
+                <li role="presentation"><a href="#datosFactura" aria-controls="datosFactura" role="tab" data-toggle="tab">Datos correo facturación</a></li>
+                <li role="presentation"><a href="#datosUsuario" aria-controls="datosUsuario" role="tab" data-toggle="tab">Datos de usuario Sunat</a></li>
+            </ul>
+        <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="datosPersonal">
+                    <div class="row">
+                        <div class="col-lg-9 form-horizontal">
+                            <div class="form-group">
+                                @Html.CRM().TextBoxButtonFor(m => m.NumeroRuc, "col-lg-6", "RUC", "col-lg-2").OnButtonClick("onClickEmpresa(this)").FontButton("glyphicon glyphicon-search").Attributes(new { @placeholder = "RUC", @maxlength = "11" })
+                            </div>
+                            <div class="form-group">
+                                @Html.CRM().TextBoxFor(m => m.RazonSocial, "col-lg-10", "Razon Social", "col-lg-2").Attributes(new { @placeholder = "Razón Social" })
+                            </div>
+                            <div class="form-group">
+                                @Html.CRM().TextBoxFor(m => m.Nombre, "col-lg-10", "Nombre comercial", "col-lg-2").Attributes(new { @placeholder = "Nombre comercial" })
+                            </div>
+                            <div class="form-group">
+                                @Html.CRM().TextBoxFor(m => m.Direccion, "col-lg-10", "Dirección", "col-lg-2").Attributes(new { @placeholder = "Dirección" })
+                            </div>
+                            <div class="form-group">
+                                @Html.CRM().TextBoxFor(m => m.Telefono, "col-lg-4", "Teléfono", "col-lg-2").Attributes(new { @placeholder = "Telefono" })
+                                @Html.CRM().TextBox("Celular", null, "col-lg-4", "Celular", "col-lg-2").Attributes(new { @placeholder = "Celular" })
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-2">
+                            <div class="thumbnail ">
+                                <img src="@Url.Action("ShowImage", "Empresa", new { @id = Model.EmpresaId})" id="logo" />
+                                <div class="caption">
+                                    <p>
+                                        <input type="file"  name="image-upload" id="image-upload" class="form-control" />
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="datosFactura">
+                    <div class="row">
+                        <div class="col-lg-6 form-horizontal">
+                            <div class="form-group">
+                                @Html.CRM().TextBoxFor(m => m.UsuarioCorreo, "col-lg-4", "Usuario", "col-lg-2").Attributes(new { @placeholder = "Usuario Correo" })
+                                @Html.CRM().PasswordFor(m => m.ContrasenaCorreo, "col-lg-4", "Contraseña", "col-lg-2").Attributes(new { @placeholder = "Contraseña Correo" })
+                            </div>
+                            <div class="form-group">
+                                @Html.CRM().TextBoxFor(m => m.Correo, "col-lg-10", "Correo", "col-lg-2").Attributes(new { @placeholder = "Correo" })
+                            </div>
+                            <div class="form-group">
+                                @Html.CRM().TextBoxFor(m => m.AliasCorreo, "col-lg-10", "Alias", "col-lg-2").Attributes(new { @placeholder = "Alias Correo" })
+                            </div>
+                        </div>
+                        <div class="col-lg-6 form-horizontal">
+                            <div class="form-group">
+                                @Html.CRM().TextBoxFor(m => m.ServerSmtp, "col-lg-4", "SMTP", "col-lg-2").Attributes(new { @placeholder = "Servidor SMTP" })
+                                @Html.CRM().TextBoxFor(m => m.PuertoSmtp, "col-lg-4", "Puerto", "col-lg-2").Attributes(new { @placeholder = "Puerto" })
+                            </div>
+                            @*<div class="form-group">
+                                @Html.CRM().TextBoxFor(m => m.SeguridadSsl, "col-lg-4", "SSL", "col-lg-2").Attributes(new { @placeholder = "SSL", @maxlength = "1" })
+                            </div>*@
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="datosUsuario">
+                    <div class="row">
+                        <div class="col-lg-5 form-horizontal">
+                            <div class="form-group">
+                                @Html.CRM().TextBoxFor(m => m.UsuarioSunat, "col-lg-4", "Usuario", "col-lg-2").Attributes(new { @placeholder = "Usuario Sunat" })
+                                @Html.CRM().PasswordFor(m => m.ContrasenaSunat, "col-lg-4", "Password", "col-lg-2").Attributes(new { @placeholder = "Contraseña Sunat" })
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-lg-2">Ruta XML</label>
+                                <div class="col-lg-10">
+                                    <input type="file" id="RutaXml" name="RutaXml" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-lg-2">Ruta PDF</label>
+                                <div class="col-lg-10">
+                                    <input type="file" id="RutaPdf" name="RutaPdf" class="form-control" />
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-7 form-horizontal">
+                            <div class="form-group">
+                                <label class="control-label col-lg-2">Ruta CDR</label>
+                                <div class="col-lg-10">
+                                    <input type="file" id="RutaCrd" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-lg-2">Ruta Firma</label>
+                                <div class="col-lg-10">
+                                    <input type="file" id="RutaFirma" class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.CRM().PasswordFor(m => m.ContrasenaFirma, "col-lg-4", "Contraseña Firma", "col-lg-2").Attributes(new { @placeholder = "Contraseña Firma" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @Html.HiddenFor(m => m.EmpresaId)
+            @Html.HiddenFor(m => m.EditAction)
+        }
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $.uploadPreview({
+            input_field: "#image-upload",
+            preview_box: "#image-preview",
+            label_field: "#image-label"
+        });
+    });
+
+
+    function onClickMenuBar(control) {
+        switch (control) {
+            case '@ButtonMenuBarActionConstant.SAVE':
+                saveData(control);
+                break;
+            case '@ButtonMenuBarActionConstant.DELETE':
+
+                break;
+            case '@ButtonMenuBarActionConstant.EXIT':
+                controllerGetAction('@Url.Action("Bandeja", "Empresa", new { area = "AM" })', null, 'workspace', false, false, null);
+                break;
+        }
+
+    };
+
+    function onClickEmpresa() {
+
+    }
+
+    $("#image-upload").change(function () {
+        readURL(this);
+    });
+
+    function readURL(input) {
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#logo').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function saveData() {
+
+        if (isEmptyElement("NumeroRuc", "Ingrese el campo RUC"))
+            return false;
+
+        if (isEmptyElement("RazonSocial", "Ingrese el campo razon social"))
+            return false;
+
+
+        if (isEmptyElement("Nombre", "Ingrese nombre"))
+            return false;
+
+        if (isEmptyElement("Direccion", "Ingrese direccion"))
+            return false;
+
+        if (isEmptyElement("Telefono", "Ingrese telefono"))
+            return false;
+
+
+        var formData = new FormData();
+
+        var rutaXml = $("#RutaXml").get(0);
+        var xml = rutaXml.files[0];
+
+        var rutaPdf = $("#RutaPdf").get(0);
+        var pdf = rutaPdf.files[0];
+
+        var rutaCrd = $("#RutaCrd").get(0);
+        var cdr = rutaCrd.files[0];
+
+        var rutaFirma = $("#RutaFirma").get(0);
+        var firma = rutaFirma.files[0];
+
+        var imageFile = $("#image-upload").get(0);
+        var image = imageFile.files[0];
+
+        var form = $('#form1');
+        var token = $('input[name="__RequestVerificationToken"]', form).val();
+        formData.append("__RequestVerificationToken", token);
+        formData.append("Header", JSON.stringify($('#form1').serializeObject()));
+        formData.append("EditAction", $("#EditAction").val());
+        formData.append("fileXml", xml);
+        formData.append("filePdf", pdf);
+        formData.append("fileCdr", cdr);
+        formData.append("fileFirma", firma);
+        formData.append("fileImage", image);
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("Create", "Empresa", new { area = "AM" })',
+            data: formData,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                if (response.success) {
+                    MsgAlert(1, response.message);
+                    controllerGetAction('@Url.Action("Bandeja", "Empresa", new { area = "AM" })', null, 'workspace', false, false, null);
+                } else {
+                    MsgAlert(4, response.message);
+                }
+            },
+            error: function (error) {
+
+            }
+        });
+
+    }
+</script>

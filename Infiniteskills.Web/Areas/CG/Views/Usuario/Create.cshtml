@@ -1,0 +1,148 @@
+﻿@model Infiniteskills.Transport.PersonalDTO
+@using Infiniteskills.Helpers
+@{
+
+}
+<div class="row">
+    <div class="col-lg-12">
+        <nav class="btn-toolbar text-left titleuser">
+            <a href="#" data-toggle="sidebar"><span class="glyphicon glyphicon-option-vertical"></span></a>
+            <label>@ViewBag.Title</label>
+        </nav>
+    </div>
+</div>
+@Html.CRM().MenuBar("MenuBar", "onClickMenuBar", new ItemMenuBar[]{
+                                                   new ItemMenuBar(MenuBarButtonType.Save),
+                                                   new ItemMenuBar(MenuBarButtonType.Exit)
+                                               })
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-body form-horizontal">
+                @using (Html.BeginForm("", "", FormMethod.Post, new { @id = "form1" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="col-lg-5">
+                        <div class="form-group">
+                            @Html.CRM().Select2List("SucursalId", Model.SucursalId, @ViewBag.SucursalList, "col-lg-10", "Sucursal", "col-lg-2")
+                        </div>
+                        <div class="form-group">
+                            @Html.CRM().Select2List("PersonalId", Model.PersonalId, ViewBag.ListarPersonal, "col-lg-10", "Personal", "col-lg-2")
+                        </div>
+                        <div class="form-group">
+                            @Html.CRM().TextBoxFor(m => m.Apellidos, "col-lg-10", "Apellidos", "col-lg-2").Attributes(new { @placeholder = "Apellidos" })
+                        </div>
+                        <div class="form-group">
+                            @Html.CRM().TextBoxFor(m => m.Usuario, "col-lg-4", "Usuario", "col-lg-2").Attributes(new { @placeholder = "Usuario" })
+                            @Html.CRM().PasswordFor(m => m.Password, "col-lg-4", "Contraseña", "col-lg-2").Attributes(new { @placeholder = "Contraseña" })
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="form-group">
+                            @Html.CRM().TextBoxFor(m => m.NumeroDocumento, "col-lg-4", "DNI", "col-lg-2").Attributes(new { @placeholder = "DNI", maxlength = "8" })
+                            @Html.CRM().TextBoxFor(m => m.Telefono, "col-lg-4", "Telefono", "col-lg-2").Attributes(new { @placeholder = "Telefono", maxlength = "10" })
+                        </div>
+                        <div class="form-group">
+                            @Html.CRM().TextBoxFor(m => m.Correo, "col-lg-10", "Correo", "col-lg-2").Attributes(new { @placeholder = "Correo" })
+
+                        </div>
+                        <div class="form-group">
+                            @Html.CRM().DateTimePickerFor(m => m.FechaNacimiento, "col-lg-6", "Fecha Nacimiento", "col-lg-2").PickerType(DateTimePickerType.Date)
+                        </div>
+                    </div>
+                    @Html.HiddenFor(m => m.EditAction)
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#PersonalId").select2({
+            ajax: {
+                url: '@Url.Action("GetPersonal")',
+                dataType: 'json',
+                delay: 250,
+                type: 'POST',
+                data: function (params) {
+                    return {
+                        query: params.term // search ter
+                    };
+                },
+                processResults: function (data, params) {
+                    return {
+                        results: $.map(data.data, function (item) {
+                            return {
+                                text: item.Nombres,
+                                id: item.PersonalId
+                            }
+                        })
+                    };
+                },
+                cache: true
+            },
+            placeholder: 'Busqueda de personal',
+            allowClear: true,
+            escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+            minimumInputLength: 1,
+            language: {
+                inputTooShort: function () {
+                    return "Busqueda de personal";
+                }
+            }
+        });
+    });
+
+    function onClickMenuBar(control) {
+        switch (control) {
+            case '@ButtonMenuBarActionConstant.SAVE':
+                saveData(control);
+                break;
+            case '@ButtonMenuBarActionConstant.DELETE':
+
+                break;
+            case '@ButtonMenuBarActionConstant.EXIT':
+                controllerGetAction('@Url.Action("Bandeja", "Usuario", new { area = "CG" })', null, 'workspace', false, false, null);
+                break;
+        }
+
+    };
+    function saveData(key) {
+
+
+        if (isEmptyElement("SucursalId", "Seleccione un almacen."))
+            return false;
+
+
+        if (isEmptyElement("Apellidos", "Ingrese el campo apellidos"))
+            return false;
+
+        if (isEmptyElement("NumeroDocumento", "Ingrese el campo numero documento identidad"))
+            return false;
+
+        if (isEmptyElement("Telefono", "Ingrese Telefono"))
+            return false;
+
+        var form = $('#form1');
+        var token = $('input[name="__RequestVerificationToken"]', form).val();
+        var jsonData = {
+            __RequestVerificationToken: token,
+            Header: JSON.stringify($('#form1').serializeObject()),
+            EditAction: $("#EditAction").val()
+        };
+        controllerSaveResponse("@Url.Action("Create", "Usuario", new { area = "CG" })", jsonData, false, false, function (response) {
+            if (response.success) {
+                MsgAlert(1, response.message);
+                controllerGetAction('@Url.Action("Bandeja", "Usuario", new { area = "CG" })', null, 'workspace', false, false, null);
+            } else {
+                MsgAlert(4, response.message);
+            }
+        });
+    };
+
+
+
+</script>
+

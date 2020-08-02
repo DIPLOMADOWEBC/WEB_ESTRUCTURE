@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{81238098-7DE0-46A4-BE44-323BAA7AB1DC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Infiniteskills.Repository</RootNamespace>
+    <AssemblyName>Infiniteskills.Repository</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AlmacenRepository.cs" />
+    <Compile Include="AreaRepository.cs" />
+    <Compile Include="CategoriaRepository.cs" />
+    <Compile Include="ContactoRepository.cs" />
+    <Compile Include="Contracts\IBienServicioRepository.cs" />
+    <Compile Include="Contracts\IImpuestoRepository.cs" />
+    <Compile Include="Contracts\IOrdenItemRepository.cs" />
+    <Compile Include="Contracts\IOrdenRepository.cs" />
+    <Compile Include="Contracts\IPersonalRepository.cs" />
+    <Compile Include="Contracts\IProveedorRepository.cs" />
+    <Compile Include="Contracts\IUnidadMedidaRepository.cs" />
+    <Compile Include="Contracts\IUsuarioRepository.cs" />
+    <Compile Include="DepartamentoRepository.cs" />
+    <Compile Include="DireccionRepository.cs" />
+    <Compile Include="DistritoRepository.cs" />
+    <Compile Include="DocumentoComercialRepository.cs" />
+    <Compile Include="DocumentoIdentidadRepository.cs" />
+    <Compile Include="EmpresaRepository.cs" />
+    <Compile Include="FormaPagoRepository.cs" />
+    <Compile Include="FormaVentaRepository.cs" />
+    <Compile Include="ImpuestoRepository.cs" />
+    <Compile Include="LineaRepository.cs" />
+    <Compile Include="MarcaRepository.cs" />
+    <Compile Include="MenuRepository.cs" />
+    <Compile Include="MesContableRepository.cs" />
+    <Compile Include="MonedaRepository.cs" />
+    <Compile Include="OrdenItemRepository.cs" />
+    <Compile Include="OrdenRepository.cs" />
+    <Compile Include="PaisRepository.cs" />
+    <Compile Include="ParametroSistemaRepository.cs" />
+    <Compile Include="PeriodoCorrelativoRepository.cs" />
+    <Compile Include="PeriodoEmpresaRepository.cs" />
+    <Compile Include="PeriodoRepository.cs" />
+    <Compile Include="PersonalRepository.cs" />
+    <Compile Include="OrdenSaldoRepository.cs" />
+    <Compile Include="BienServicioRepository.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProveedorContactoRepository.cs" />
+    <Compile Include="ProveedorRepository.cs" />
+    <Compile Include="ProvinciaRepository.cs" />
+    <Compile Include="RolMenuRepository.cs" />
+    <Compile Include="RolRepository.cs" />
+    <Compile Include="RolUsuarioRepository.cs" />
+    <Compile Include="SerieRepository.cs" />
+    <Compile Include="SucursalRepository.cs" />
+    <Compile Include="SucursalUsuarioRepository.cs" />
+    <Compile Include="TablaRepository.cs" />
+    <Compile Include="TipoBienRepository.cs" />
+    <Compile Include="TipoMovimientoRepository.cs" />
+    <Compile Include="TipoOperacionRepository.cs" />
+    <Compile Include="TipoPrecioRepository.cs" />
+    <Compile Include="TipoExistenciaRepository.cs" />
+    <Compile Include="TipoProveedorRepository.cs" />
+    <Compile Include="TipoUsuarioRepository.cs" />
+    <Compile Include="UnidadMedidaRepository.cs" />
+    <Compile Include="UsuarioRepository.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Infiniteskills.Common\Infiniteskills.Common.csproj">
+      <Project>{01163454-8314-4289-8703-3606ca2fd51b}</Project>
+      <Name>Infiniteskills.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infiniteskills.Domain\PVenta.Domain.csproj">
+      <Project>{cb9dba8e-1b34-497c-9dfa-d829da45dea2}</Project>
+      <Name>PVenta.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infiniteskills.Infra.Core\PVenta.Infra.Core.csproj">
+      <Project>{31dcbfa1-fa50-46b8-bcf8-2c90d135bcba}</Project>
+      <Name>PVenta.Infra.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infiniteskills.Infra.Data\PVenta.Infra.Data.csproj">
+      <Project>{d557b8dd-7742-470d-8e06-7abea605a6df}</Project>
+      <Name>PVenta.Infra.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

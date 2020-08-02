@@ -1,0 +1,213 @@
+@using Infiniteskills.Helpers
+@{
+    ViewData["Title"] = "Index";
+}
+<div class="row">
+    <div class="col-lg-12">
+        <nav class="btn-toolbar text-left titleuser">
+            <a href="#" data-toggle="sidebar"><span class="glyphicon glyphicon-option-vertical"></span></a>
+            <label>Listado Ventas</label>
+        </nav>
+    </div>
+</div>
+@Html.CRM().MenuBar("MenuBar", "onClickMenuBar", new ItemMenuBar[]{
+                                                   new ItemMenuBar(MenuBarButtonType.New),
+                                                   new ItemMenuBar(MenuBarButtonType.Edit),
+                                                   new ItemMenuBar(MenuBarButtonType.Print,false)
+                                               })
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-body form-horizontal">
+                <div class="col-lg-11">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            @Html.CRM().TextBox("Codigo", null, "col-lg-5", "Código", "col-lg-2").Attributes(new { @placeholder = "Numero documento" })
+                        </div>
+                        <div class="form-group">
+                            @Html.CRM().TextBox("RazonSocial", null, "col-lg-10", "Cliente", "col-lg-2").Attributes(new { @placeholder = "Razon Social" })
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            @Html.CRM().DropDownList("DocumentoComercialId", null, @ViewBag.DocComerciaList, "col-lg-10", "Documento", "col-lg-2", new { @onchange = "onChangeDocComercial(this);" })
+                        </div>
+                        <div class="form-group">
+                            @Html.CRM().DateTimePicker("FechaPedido", null, "col-lg-10", "Fecha", "col-lg-2").PickerType(DateTimePickerType.Date).Attributes(new { @placeholder = "Fecha pedido" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-1">
+                    <div class="form-group">
+                        @(Html.CRM().InputButton("buttonBuscar", new { Styles = "width:100%" }).ElementType(ButtonElementType.Button).Value("Buscar").OnClick("$('#jqGridPedido').jqGrid('setGridParam',{datatype:'json'}).trigger('reloadGrid');"))
+                    </div>
+                    <div class="form-group">
+                        @(Html.CRM().InputButton("buttonLimpiar", new { Styles = "width:100%" }).ElementType(ButtonElementType.Button).Value("Limpiar").OnClick("$('input:text').val(''); $('#jqGridPedido').jqGrid('setGridParam',{datatype:'json'}).trigger('reloadGrid');$('#DocumentoComercialId option:first').prop('selected','selected');"))
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12" id="bandeja">
+        <div class="panel panel-default">
+            <div class="panel-body" id="panel">
+                <table id="jqGridPedido"></table>
+                <div id="jqGridPager"></div>
+            </div>
+        </div>
+    </div>
+</div>
+@using (Html.CRM().Popup("modalFactura", "Factura", "onClickOkFactura", SizePopup.Large))
+{
+    <div id="divFacturaContent"></div>
+}
+
+
+
+<script type="text/javascript">
+    var _heightGrid = getHeightForResize(75);
+    var _widthPanel = $("#panel").width();
+    $(document).ready(function () {
+
+        $("#jqGridPedido").jqGrid({
+            url: '@Url.Action("ListarBandeja", "Pedido", new { area = "OP" })',
+            mtype: "POST",
+            postData: {
+                codigo: function () { return $("#Codigo").val() },
+                fechaPedido: function () { return $("#FechaPedido").val() },
+                razonSocial: function () { return $("#RazonSocial").val() },
+                docComercialId: function () { return $("#DocumentoComercialId").val() }
+            },
+            datatype: "json",
+            colModel: [
+                { label: 'Id', name: 'OrdenId', key: true, hidden: true },
+                { label: 'Codigo', name: 'Codigo', width: 15 },
+                { label: 'Documento', name: 'Documento', width: 20, sortable: false },
+                { label: 'Tipo Operación', name: 'TipoOperacion', width: 30, sortable: false },
+                { label: 'Fecha', name: 'FechaOrden', width: 20, align: 'center', sortable: false },
+                { label: 'Cliente', name: 'Cliente', width: 70, sortable: false },
+                {
+                    label: 'Cantidad', name: 'Cantidad', width: 20, formatter: 'integer', align: 'right', formatoptions: {
+                        decimalSeparator: ".", thousandsSeparator: " ", decimalPlaces: 2
+                    }
+                },
+                {
+                    label: 'Total', name: 'TotalPedido', width: 20, formatter: 'integer', align: 'right', formatoptions: {
+                        decimalSeparator: ".", thousandsSeparator: " ", decimalPlaces: 2
+                    }
+                }
+            ],
+            viewrecords: true,
+            loadonce: true,
+            height: 350,
+            rowNum: 20,
+            rowList: [10, 20, 30],
+            subGrid: true,
+            subGridRowExpanded: showChildGrid, subGridOptions: {
+                reloadOnExpand: false,
+                selectOnExpand: true
+            },
+            pager: "#jqGridPager",
+            height: (_heightGrid - 240),
+            width: _widthPanel,
+        });
+
+        $("#modalFactura").on('show.bs.modal', function () {
+            controllerGetAction('@Url.Action("Documento", "Pedido")', null, 'divFacturaContent', false, false, null);
+            @*var options = {
+                height: "100px",
+                pdfOpenParams: { view: 'FitV', page: '2' }
+            };
+            PDFObject.embed("@Url.Action("Documento", "Pedido")", "#divFacturaContent", options);*@
+        });
+
+    });
+
+    function showChildGrid(parentRowID, parentRowKey) {
+        var rowData = jQuery("#jqGridPedido").getRowData(parentRowKey);
+        var childGridID = parentRowID + "_table";
+        var childGridPagerID = parentRowID + "_pager";
+        var childGridURL = parentRowKey + ".json";
+        $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+        $("#" + childGridID).jqGrid({
+            url: '@Url.Action("ListarDetalle", "Pedido", new { area = "OP" })',
+            mtype: "POST",
+            postData: {
+                ordenId: rowData["OrdenId"]
+            },
+            datatype: "json",
+            page: 1,
+            colModel: [
+                { label: 'Order ID', name: 'PedidoItemId', key: true, hidden: true },
+                { label: 'Codigo', name: 'Codigo', width: 50 },
+                { label: 'Producto', name: 'Descripcion', width: 150 },
+                {
+                    label: 'Cantidad', name: 'CantidadProducto', width: 50, formatter: 'integer', align: 'right', formatoptions: {
+                        decimalSeparator: ".", thousandsSeparator: " ", decimalPlaces: 2
+                    }
+                },
+                {
+                    label: 'Precio Unitario', name: 'PrecioProducto', width: 50, formatter: 'integer', align: 'right', formatoptions: {
+                        decimalSeparator: ".", thousandsSeparator: " ", decimalPlaces: 2
+                    }
+                },
+                {
+                    label: 'Sub Total', name: 'SubTotal', width: 50, formatter: 'integer', align: 'right', formatoptions: {
+                        decimalSeparator: ".", thousandsSeparator: " ", decimalPlaces: 2
+                    }
+                }
+            ],
+            loadonce: true,
+            width: 960,
+            height: '100%',
+            footerrow: true,
+            loadComplete: function () {
+                var grid = $(this);
+                total = grid.jqGrid('getCol', 'SubTotal', false, 'sum');
+                grid.jqGrid('footerData', 'set', { Producto: 'Total', PrecioVenta: 0, Cantidad: 0, SubTotal: total });
+
+            },
+            pager: "#" + childGridPagerID
+        });
+
+    }
+
+    function onClickMenuBar(control) {
+
+        var postData = {
+            editAction: '',
+            ordenId: 0
+        };
+        var row = getGridSelectedRow("jqGridPedido");
+        switch (control) {
+            case "@ButtonMenuBarActionConstant.NEW":
+                postData.editAction = '@EditActionConstant.NEW';
+                controllerGetAction('@Url.Action("Create", "Pedido", new { area = "OP" })', postData, 'workspace', true, true, null);
+                break;
+            case "@ButtonMenuBarActionConstant.EDIT":
+                if (!isEmpty(row)) {
+                    postData.editAction = '@EditActionConstant.EDIT';
+                    postData.ordenId = row.OrdenId;
+                    controllerGetAction('@Url.Action("Create", "Pedido", new { area = "OP" })', postData, 'workspace', true, true, null);
+                } else {
+                    MsgAlert(3, 'Seleccione un pedido');
+                }
+                break;
+            case "@ButtonMenuBarActionConstant.PRINT":
+                var w = window.open('about:blank', 'windowname');
+                var forms = '<form id="frmOrdenCompra" action="@Url.Action("Factura", "Pedido")" method="post"></form>';
+                w.document.write(forms);
+                w.document.close();
+                w.document.getElementById('frmOrdenCompra').submit();
+               // $("#modalFactura").modal('show');
+                break;
+        }
+    };
+
+    function onChangeDocComercial()
+    {
+        $('#jqGridPedido').jqGrid('setGridParam', { datatype: 'json' }).trigger('reloadGrid');
+    }
+</script>
